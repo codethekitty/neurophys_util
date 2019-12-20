@@ -45,12 +45,14 @@ def burst_ps(spiketrain,interval):
         actual=j-i+1
         expected=(ls[j]-ls[i])*r
         P=-np.log2(poisson.pmf(actual,expected))
-        if (P>crit)&(j<len(ls)-1)&(actual>expected):
-            j+=1
+        if (P>crit)&(j<len(ls)-1)&(actual>expected)&(P!=np.inf):
             burst.append([P,actual,ls[i],ls[j]])
+            j+=1
         else:
             i+=1
             j=i+2
+            if actual>100:
+                print(P,i,j,len(ls))
     burst=np.array(burst)
     burst2=[]
     if np.size(burst,axis=0)>1:
